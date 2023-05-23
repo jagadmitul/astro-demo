@@ -1,0 +1,28 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Showcase from '../components/Showcase.astro';
+import Card from '../components/Card.astro';
+
+import { getDinos } from "../lib/api";
+
+let dinos = await getDinos()
+export const prerender = false;
+---
+
+<Layout title="Wordpress Blog">
+  <Showcase heading="Wordpress Blog" text="A headless blog built with Astro + Wordpress" />
+  <section class="page-content">
+    <div class="container">
+      {dinos.map(dino => (
+        <Card>
+          <h3>{dino.title.rendered}</h3>
+          <div>
+            Written by <strong>{'TPots'} </strong> on {new Date(dino.date).toLocaleDateString()}
+          </div>
+            <p set:html={`${(dino.content.rendered).slice(0, 150)}...`} />
+          <a class="btn" href={`/dinos/${dino.slug}/`}>Read More</a>
+        </Card>
+      ))}
+    </div>
+  </section>
+</Layout>

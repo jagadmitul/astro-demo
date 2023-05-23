@@ -1,0 +1,28 @@
+---
+import Card from '../../components/Card.astro';
+import Layout from '../../layouts/Layout.astro';
+import { getDinoPost } from '../../lib/api';
+
+const { slug } = Astro.params;
+
+let [post] = await getDinoPost(slug);
+export const prerender = false;
+---
+
+<Layout title={post.title.rendered} footer={false}>
+  <section class="page-content">
+    <div class="container">
+      <Card>
+        <a class="btn" href="/blog">Go Back</a>
+        <h2>{post.title.rendered}</h2>
+        <div>
+          Written by <strong>{'TPots'}</strong> on {
+            new Date(post.date).toLocaleDateString()
+          }
+        </div>
+        <img style="margin-top: 20px;" src={post._embedded['wp:featuredmedia']['0'].source_url} />
+        <Fragment set:html={post.content.rendered} />
+      </Card>
+    </div>
+  </section>
+</Layout>
